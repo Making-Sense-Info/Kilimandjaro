@@ -1,4 +1,3 @@
-from enum import StrEnum, auto
 from chromadb.api import ClientAPI
 from chromadb.config import Settings
 from textual import on
@@ -9,20 +8,8 @@ import pprint
 import chromadb
 from textual.app import App, ComposeResult
 from textual.widgets import Button, ContentSwitcher, Footer, Header, Label, Markdown, Pretty, ProgressBar
-from dataclasses import dataclass
 
-class IDs(StrEnum):
-    RUN = auto()
-    SETDB = auto()
-    PRE = auto()
-    INFO = auto()
-    PROGRESS = auto()
-    EXIT = auto()
 
-@dataclass
-class State():
-    db_setup: bool = False
-    data_loaded: bool = False
 
 class Kilimandjaro(App):
     TITLE = "Kilimandjaro"
