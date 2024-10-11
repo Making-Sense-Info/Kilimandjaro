@@ -11,28 +11,6 @@ from textual.app import App, ComposeResult
 from textual.widgets import Button, ContentSwitcher, Footer, Header, Label, Markdown, Pretty, ProgressBar
 from dataclasses import dataclass
 
-"""
-print("Extraction liste de code")
-questionnaire_cs = get_category_scheme_from_ddi(pathlib.Path.cwd() / "dat" / "constances-questionnaire.xml")
-print(f"Extraction termes Snomed via : {snomed_random_query.name}")
-snomed_terms = get_snomed_terms(snomed_random_query)
-
-# model used for embeddings is all-MiniLM-L6-v2 (default one)
-print("Indexation en base")
-client = chromadb.Client()
-collection = client.get_or_create_collection(name="terms")
-ids = [f"sno{i}" for i, _ in enumerate(snomed_terms)]
-collection.add(documents=snomed_terms, ids=ids)
-
-print("Calcul de la correspondance")
-results = collection.query(query_texts=questionnaire_cs, n_results=2)
-
-for i, e in enumerate(questionnaire_cs):
-    print(f"Constances: {e} - Snomed terms: {results["documents"][i]}")
-
-collection.delete(ids)
-"""
-
 class IDs(StrEnum):
     RUN = auto()
     SETDB = auto()
