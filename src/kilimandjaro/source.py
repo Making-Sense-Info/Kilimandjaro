@@ -4,17 +4,13 @@ from xml.etree.ElementPath import findall
 import httpx
 from urllib.parse import quote_plus
 from dataclasses import dataclass
+from kilimandjaro.models import SPARQLQuery
 
 namespaces = {
     "l": "ddi:logicalproduct:3_3",
     "r": "ddi:reusable:3_3"
 }
 
-@dataclass
-class SPARQLQuery():
-    """ A SPARQL query with a label """
-    name: str
-    value: str
 
 snomed_tension_query = SPARQLQuery("Contient `tension`", """
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
