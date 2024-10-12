@@ -12,3 +12,15 @@ More precisely, this program:
 - per item in the scheme, display the `n` most relevant Snomed terms
 
 Currently, the program is displayed as a [TUI](https://en.wikipedia.org/wiki/Text-based_user_interface) application using [textualize](https://textual.textualize.io).
+
+## Next
+
+To generalise:
+
+- the app will be a simple webapp (using Streamlit)
+- enter a text (see above), compare to a Snomed CT or another vocab (CCAM ?)
+
+Two possibles program:
+
+- the webapp
+- the indexer
