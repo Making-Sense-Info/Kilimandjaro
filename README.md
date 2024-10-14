@@ -38,7 +38,12 @@ rye run webui
 
 ## Architecture
 
-> document
+The three main pieces of this application are:
+  - the vector database, using ChromaDB, to produce and store embeddings
+  - the indexer program, which fetch source data and push them to ChromaDB
+  - the web UI, which allows humans to really use the application
+
+The indexer is a command line
 
 ## Notes
 

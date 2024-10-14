@@ -2,6 +2,7 @@
 This module holds the top level function for managing the index, ie the data inside the ChromaDB instance.
 """
 
+from configparser import ConfigParser
 from kilimandjaro.db import add_to_collection
 from kilimandjaro.source import get_ccam_actes, ccam_acte_query
 import fire
@@ -22,9 +23,9 @@ def add_ccam_actes():
     # that can be indexed, we are batching here
     # see https://github.com/chroma-core/chroma/issues/1049
     batch_index = 0
-    batch_index_end = batch_index+500
+    batch_index_end = batch_index + 500
     while batch_index <= len(documents):
-        end = min(batch_index_end, len(documents)+1)
+        end = min(batch_index_end, len(documents) + 1)
         subdocs = documents[batch_index:end]
         subids = ids[batch_index:end]
         print(f"indexing documents from {batch_index} to {end-1}")
@@ -34,19 +35,27 @@ def add_ccam_actes():
 
 
 def add(thing):
+    """Add data to ChromaDB"""
     match thing:
         case "ccam":
             add_ccam_actes()
         case _:
             print(f"{thing} is not a valid add option.")
 
+
 def config():
-    from configparser import ConfigParser
+    """Provides configuration information"""
     conf = ConfigParser()
     conf.read("config.toml")
     print("Configuration sections:")
     for section in conf.sections():
         print(f"- {section}")
 
+
+def check():
+    """For now, this command is use to perform dev check."""
+    get_ccam_actes(ccam_acte_query)
+
+
 if __name__ == "__main__":
-    fire.Fire({"add": add, "config": config})
+    fire.Fire({"add": add, "config": config, "check": check})

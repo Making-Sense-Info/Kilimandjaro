@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 from typing_extensions import TypedDict
 import xml.etree.ElementTree as et
 from pathlib import Path
@@ -6,6 +7,9 @@ from urllib.parse import quote_plus
 from kilimandjaro.models import SPARQLQuery
 
 TARGET_TRIPLE_STORE_URL = "http://vps-51dea4b2.vps.ovh.net:7200/repositories/"
+
+conf = ConfigParser()
+conf.read("config.toml")
 
 namespaces = {"l": "ddi:logicalproduct:3_3", "r": "ddi:reusable:3_3"}
 
@@ -90,7 +94,9 @@ def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     Get all the CCAM actes, with codes and labels.
     See https://smt.esante.gouv.fr/terminologie-ccam/
     """
-    target = f"{TARGET_TRIPLE_STORE_URL}ccam?query={query.encoded()}"
+    print(conf["kilimandjaro.sources"]["triple-store-url"])
+    target = f"{conf["kilimandjaro.sources"]["triple-store-url"]}ccam?query={query.encoded()}"
+    print(target)
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     json_res = resp.json()
 
