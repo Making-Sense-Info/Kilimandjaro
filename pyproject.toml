@@ -22,7 +22,7 @@ managed = true
 dev-dependencies = []
 
 [tool.rye.scripts]
-dev = "streamlit run src/kilimandjaro/main.py"
+webui = "streamlit run src/kilimandjaro/main.py"
 indexer = "python src/kilimandjaro/indexer.py"
 
 [tool.hatch.metadata]
