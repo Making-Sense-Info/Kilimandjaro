@@ -4,8 +4,9 @@ import httpx
 from urllib.parse import quote_plus
 from kilimandjaro.models import SPARQLQuery
 
-namespaces = {"l": "ddi:logicalproduct:3_3", "r": "ddi:reusable:3_3"}
+TARGET_TRIPLE_STORE_URL = "http://vps-51dea4b2.vps.ovh.net:7200/repositories/"
 
+namespaces = {"l": "ddi:logicalproduct:3_3", "r": "ddi:reusable:3_3"}
 
 snomed_tension_query = SPARQLQuery(
     name="Contient `tension`",
@@ -76,3 +77,16 @@ async def get_snomed_terms(query: SPARQLQuery):
     res = resp.json()
     final_res = [terms["label"]["value"] for terms in res["results"]["bindings"]]
     return final_res
+
+def get_ccam_actes(query: SPARQLQuery):
+    """
+    Get all the CCAM actes, with codes and labels.
+    See https://smt.esante.gouv.fr/terminologie-ccam/
+    """
+    target = f"{TARGET_TRIPLE_STORE_URL}ccam?query={query.encoded()}"
+    resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
+    json_res = resp.json()
+
+    final_res = [{"code": acte["code"]["value"], "label": acte["label"]["value"]} for acte in json_res["results"]["bindings"]]
+
+    return final_res[452]

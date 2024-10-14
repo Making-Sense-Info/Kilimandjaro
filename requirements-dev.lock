@@ -59,6 +59,8 @@ fastapi==0.113.0
     # via chromadb
 filelock==3.15.4
     # via huggingface-hub
+fire==0.7.0
+    # via kilimandjaro
 flatbuffers==24.3.25
     # via onnxruntime
 fsspec==2024.9.0
@@ -268,6 +270,8 @@ sympy==1.13.2
 tenacity==9.0.0
     # via chromadb
     # via streamlit
+termcolor==2.5.0
+    # via fire
 textual==0.81.0
     # via kilimandjaro
 tokenizers==0.20.0

@@ -4,7 +4,6 @@ from chromadb.api.types import GetResult
 
 client = chromadb.PersistentClient()
 
-
 class CollectionInfo(TypedDict):
     """Represents the info we get from a Chroma DB collection"""
 
@@ -20,3 +19,7 @@ def list_collections() -> dict[str, GetResult]:
         collections[collection.name] = CollectionInfo(count=count, peek=peek)
 
     return collections
+
+def add_to_collection(collection_name, documents, ids):
+    collection = client.get_or_create_collection(collection_name)
+    pass
