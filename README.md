@@ -45,6 +45,19 @@ The three main pieces of this application are:
 
 The indexer is a command line
 
+```mermaid
+graph
+    DB[(vector DB)]
+    INDEXER([Indexer])
+    WEBUI(Web UI)
+    SOURCES(Sources)
+
+    INDEXER -->|fetches| SOURCES
+    INDEXER -->|indexes| DB
+    DB -->|produces embeddings| DB
+    WEBUI -->|queries| DB
+```
+
 ## Notes
 
 ### CCAM
