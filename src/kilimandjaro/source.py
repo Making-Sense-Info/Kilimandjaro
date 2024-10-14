@@ -6,8 +6,6 @@ import httpx
 from urllib.parse import quote_plus
 from kilimandjaro.models import SPARQLQuery
 
-TARGET_TRIPLE_STORE_URL = "http://vps-51dea4b2.vps.ovh.net:7200/repositories/"
-
 conf = ConfigParser()
 conf.read("config.toml")
 
