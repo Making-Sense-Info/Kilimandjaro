@@ -24,3 +24,11 @@ Two possibles program:
 
 - the webapp
 - the indexer
+
+
+## Notes
+
+### CCAM
+
+- when parsing the JSON payload outside with `rye run indexer add ccam | yq` some errors appears
+ - for example for this acte: `{'code': 'MBFA001', 'label': 'Résection "en bloc" d\'une extrémité et/ou de la diaphyse de l\'humérus'}`
