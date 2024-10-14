@@ -6,14 +6,12 @@ st.subheader("Querying concepts")
 
 colls = db.list_collections()
 
-selected = st.selectbox(
-    "Choose a terminology",
-    colls.keys(),
-    index=None
-)
+selected = st.selectbox("Choose a terminology", colls.keys(), index=None)
 
 if selected:
-    st.text(f"You selected {colls[selected]["name"]} which holds {colls[selected]["count"]} terms.")
+    st.text(
+        f"You selected {colls[selected]["name"]} which holds {colls[selected]["count"]} terms."
+    )
 
 text = st.text_input("Your text")
 run = st.button("Run")

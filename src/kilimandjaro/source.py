@@ -1,10 +1,9 @@
 from configparser import ConfigParser
-from typing_extensions import TypedDict
 import xml.etree.ElementTree as et
 from pathlib import Path
 import httpx
 from urllib.parse import quote_plus
-from kilimandjaro.models import SPARQLQuery
+from kilimandjaro.models import CCAMActe, SPARQLQuery
 
 conf = ConfigParser()
 conf.read("config.toml")
@@ -80,11 +79,6 @@ async def get_snomed_terms(query: SPARQLQuery):
     res = resp.json()
     final_res = [terms["label"]["value"] for terms in res["results"]["bindings"]]
     return final_res
-
-
-class CCAMActe(TypedDict):
-    code: str
-    label: str
 
 
 def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:

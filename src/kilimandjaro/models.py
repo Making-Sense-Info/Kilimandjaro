@@ -1,6 +1,8 @@
 from enum import StrEnum, auto
 from dataclasses import dataclass
+from typing import TypedDict
 from urllib.parse import quote_plus
+from chromadb.api.types import GetResult
 
 
 class IDs(StrEnum):
@@ -27,3 +29,16 @@ class SPARQLQuery:
 
     def encoded(self):
         return quote_plus(self.value)
+
+
+class CCAMActe(TypedDict):
+    code: str
+    label: str
+
+
+class CollectionInfo(TypedDict):
+    """Represents the info we get from a Chroma DB collection"""
+
+    name: str
+    count: int
+    peek: GetResult
