@@ -18,6 +18,9 @@ def add_ccam_actes():
     documents = [acte["label"] for acte in actes_data]
     ids = [acte["code"] for acte in actes_data]
     print("adding to collection")
+    # WIP since there are some bugs / limits with the number of documents
+    # that can be indexed, we are batching here
+    # see https://github.com/chroma-core/chroma/issues/1049
     batch_index = 0
     batch_index_end = batch_index+500
     while batch_index <= len(documents):

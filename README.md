@@ -1,35 +1,47 @@
 # Kilimandjaro
 
-This is a proof-of-concept: mapping Constances terms to Snomed CT.
+Kilimandjaro is a program that provides mapping from any labels to medical terminologies.
 
-The basis for this mapping is producing [embeddings](https://huggingface.co/blog/getting-started-with-embeddings) for both the Constances terms and the Snomed CT terms and use a distance function to fetch the most relevant ones.
+<SCREENSHOT FROM THE WEB UI>
 
-More precisely, this program:
+Currently two sources are used:
+- the french Snomed CT
+- the CCAM terminology
 
-- get a category scheme from questionnaire represented using DDI Lifecycle
-- fetch the Snomed terminologies from a graph store
-- produce [embeddings using ChromaDB](https://docs.trychroma.com)
-- per item in the scheme, display the `n` most relevant Snomed terms
+In order to provide a useful mapping, we compare text [embeddings](https://huggingface.co/blog/getting-started-with-embeddings).
 
-Currently, the program is displayed as a [TUI](https://en.wikipedia.org/wiki/Text-based_user_interface) application using [textualize](https://textual.textualize.io).
+The main way to use Kilimandjaro is to:
+1. produce and store embeddings
+2. query through the UI.
 
-## Next
+Before anything:
+- install [rye]() (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
+- run `rye sync` at the root of this repo directory
 
-To generalise:
+To produce the embeddings - here for the CCAM data source:
 
-- the app will be a simple webapp (using Streamlit)
-- enter a text (see above), compare to a Snomed CT or another vocab (CCAM ?)
+```shell
+rye run indexer add ccam
+```
 
-Two possibles program:
+It will fetch the source data, produce and store the embeddings in a local [ChromaDB](https://www.trychroma.com) instance.
 
-- the webapp
-- the indexer
+For this source, the whole process is several minutes long.
 
+Then launch the web UI:
+
+```shell
+rye run webui
+```
+
+## Architecture
+
+> document
 
 ## Notes
 
 ### CCAM
 
 - when parsing the JSON payload outside with `rye run indexer add ccam | yq` some errors appears
- - for example for this acte: `{'code': 'MBFA001', 'label': 'Résection "en bloc" d\'une extrémité et/ou de la diaphyse de l\'humérus'}`
+ - for example for this acte: `{'code':'MBFA001', 'label': 'Résection "en bloc" d\'une extrémité et/ou de la diaphyse de l\'humérus'}`
  - this would be a better encoding: `"label":"Résection \"en bloc\" d\\'une extrémité et/ou de la diaphyse de l\\'humérus"`?
