@@ -21,6 +21,7 @@ class State:
 @dataclass
 class SPARQLQuery:
     """A SPARQL query with a label"""
+
     name: str
     value: str
 

@@ -1,3 +1,4 @@
+from typing_extensions import TypedDict
 import xml.etree.ElementTree as et
 from pathlib import Path
 import httpx
@@ -78,7 +79,13 @@ async def get_snomed_terms(query: SPARQLQuery):
     final_res = [terms["label"]["value"] for terms in res["results"]["bindings"]]
     return final_res
 
-def get_ccam_actes(query: SPARQLQuery):
+
+class CCAMActe(TypedDict):
+    code: str
+    label: str
+
+
+def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     """
     Get all the CCAM actes, with codes and labels.
     See https://smt.esante.gouv.fr/terminologie-ccam/
@@ -87,6 +94,9 @@ def get_ccam_actes(query: SPARQLQuery):
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     json_res = resp.json()
 
-    final_res = [{"code": acte["code"]["value"], "label": acte["label"]["value"]} for acte in json_res["results"]["bindings"]]
+    final_res = [
+        CCAMActe(code=acte["code"]["value"], label=acte["label"]["value"])
+        for acte in json_res["results"]["bindings"]
+    ]
 
-    return final_res[452]
+    return final_res
