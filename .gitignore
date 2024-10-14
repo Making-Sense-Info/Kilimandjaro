@@ -12,3 +12,5 @@ wheels/
 # custom
 chroma/
 dat/
+
+config.toml

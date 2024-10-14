@@ -40,6 +40,13 @@ def add(thing):
         case _:
             print(f"{thing} is not a valid add option.")
 
+def config():
+    from configparser import ConfigParser
+    conf = ConfigParser()
+    conf.read("config.toml")
+    print("Configuration sections:")
+    for section in conf.sections():
+        print(f"- {section}")
 
 if __name__ == "__main__":
-    fire.Fire({"add": add})
+    fire.Fire({"add": add, "config": config})
