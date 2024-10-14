@@ -5,8 +5,8 @@ Kilimandjaro is a program that provides mapping from any labels to medical termi
 <SCREENSHOT FROM THE WEB UI>
 
 Currently two sources are used:
-- the french Snomed CT
-- the CCAM terminology
+  - the french Snomed CT
+  - the CCAM terminology
 
 In order to provide a useful mapping, we compare text [embeddings](https://huggingface.co/blog/getting-started-with-embeddings).
 
@@ -15,8 +15,10 @@ The main way to use Kilimandjaro is to:
 2. query through the UI.
 
 Before anything:
-- install [rye]() (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
-- run `rye sync` at the root of this repo directory
+  - install [rye]() (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
+  - run `rye sync` at the root of this repo directory
+  - copy the `config-skeleton.toml` file to have a dedicated `config.toml` in which you provide actual values
+    - `rye run indexer config` will display the configuration sections (more on how to complete below)
 
 To produce the embeddings - here for the CCAM data source:
 
