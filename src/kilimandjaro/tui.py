@@ -1,26 +1,20 @@
 from chromadb.api import ClientAPI
-from chromadb.config import Settings
 from textual import on
-from textual.containers import Center, Middle
+from textual.containers import Center
 from kilimandjaro.source import (
     get_category_scheme_from_ddi,
     get_snomed_terms,
-    snomed_random_query,
     snomed_tension_query,
 )
 import pathlib
-import pprint
 import chromadb
 from textual.app import App, ComposeResult
 from textual.widgets import (
     Button,
-    ContentSwitcher,
-    Footer,
     Header,
     Label,
     Markdown,
     Pretty,
-    ProgressBar,
 )
 from kilimandjaro.models import State, IDs
 
@@ -40,7 +34,7 @@ class Kilimandjaro(App):
         yield Header()
         with Center():
             yield Button("Setup DB", id=IDs.SETDB)
-            yield Label(f"(waiting for DB to be set up)", id=IDs.INFO)
+            yield Label("(waiting for DB to be set up)", id=IDs.INFO)
             yield Pretty({}, id=IDs.PRE)
             yield Button("Run", id=IDs.RUN, disabled=not self.state.db_setup)
             # yield ProgressBar(id=IDs.PROGRESS)
@@ -53,7 +47,7 @@ class Kilimandjaro(App):
         self.client = chromadb.PersistentClient()
         label = self.query_one("#" + IDs.INFO, Label)
         pre = self.query_one("#" + IDs.PRE, Pretty)
-        label.update(f"DB set")
+        label.update("DB set")
         pre.update(self.client.list_collections())
         self.state.db_setup = True
         self.query_one("#" + IDs.RUN).disabled = False

@@ -1,17 +1,15 @@
 import xml.etree.ElementTree as et
 from pathlib import Path
-from xml.etree.ElementPath import findall
 import httpx
 from urllib.parse import quote_plus
-from dataclasses import dataclass
 from kilimandjaro.models import SPARQLQuery
 
 namespaces = {"l": "ddi:logicalproduct:3_3", "r": "ddi:reusable:3_3"}
 
 
 snomed_tension_query = SPARQLQuery(
-    "Contient `tension`",
-    """
+    name="Contient `tension`",
+    value="""
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX sct-ext: <http://data.esante.gouv.fr/NRC-France/sct-ext#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -25,8 +23,8 @@ select ?disorder ?label where {
 )
 
 snomed_random_query = SPARQLQuery(
-    "Aléa, les 500 premiers",
-    """
+    name="Aléa, les 500 premiers",
+    value="""
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 select ?disorder ?random ?label where {
 	?disorder dc:type "disorder" .
@@ -35,6 +33,20 @@ select ?disorder ?random ?label where {
     BIND(RAND() as ?random)
 } order by ?random limit 1000
 """,
+)
+
+ccam_acte_query = SPARQLQuery(
+    name="Acte CCAM",
+    value="""
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX ccam: <http://data.esante.gouv.fr/cnam/ccam/>
+    select ?acte ?label ?code where {
+        ?acte ccam:typeActe ?o .
+	?acte rdfs:label ?label .
+	?acte skos:notation ?code .
+    }
+    """,
 )
 
 
