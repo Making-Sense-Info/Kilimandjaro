@@ -34,13 +34,15 @@ def add_ccam_actes():
         batch_index_end = batch_index + 500
 
 
-def add(thing):
+def add(source):
     """Add data to ChromaDB"""
-    match thing:
+    match source:
         case "ccam":
             add_ccam_actes()
+        case "snomed":
+            print("Work in progress.")
         case _:
-            print(f"{thing} is not a valid add option.")
+            print(f"{source} is not a valid add option.")
 
 
 def config():

@@ -14,3 +14,6 @@ run = st.button("Run")
 
 if run:
     st.text(f"Thing is: {text}")
+    results = db.query("ccam", text)
+    for result in zip(results["ids"][0], results["documents"][0]):
+        st.text(result)

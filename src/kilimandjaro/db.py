@@ -1,6 +1,6 @@
 from typing_extensions import TypedDict
 import chromadb
-from chromadb.api.types import GetResult
+from chromadb.api.types import GetResult, QueryResult
 
 client = chromadb.PersistentClient()
 
@@ -25,3 +25,8 @@ def list_collections() -> dict[str, GetResult]:
 def add_to_collection(collection_name, documents, ids):
     collection = client.get_or_create_collection(collection_name)
     collection.add(documents=documents, ids=ids)
+
+def query(collection_name, text) -> QueryResult:
+    collection = client.get_collection(collection_name)
+    results = collection.query(query_texts=text)
+    return results
