@@ -4,16 +4,22 @@ import kilimandjaro.db as db
 st.header("Kilimandjaro :mountain:")
 st.subheader("Querying concepts")
 
-st.text("Available collections")
 colls = db.list_collections()
-for k, v in colls.items():
-    st.markdown(f" - {k}")
 
-text = st.text_input("A text")
+selected = st.selectbox(
+    "Choose a terminology",
+    colls.keys(),
+    index=None
+)
+
+if selected:
+    st.text(f"You selected {colls[selected]["name"]} which holds {colls[selected]["count"]} terms.")
+
+text = st.text_input("Your text")
 run = st.button("Run")
 
 if run:
-    st.text(f"Thing is: {text}")
+    st.text(f"Matching terms for: {text}")
     results = db.query("ccam", text)
     for result in zip(results["ids"][0], results["documents"][0]):
-        st.text(result)
+        st.markdown(f"_{result[0]}_ - {result[1]}")

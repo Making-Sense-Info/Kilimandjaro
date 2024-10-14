@@ -7,17 +7,17 @@ client = chromadb.PersistentClient()
 
 class CollectionInfo(TypedDict):
     """Represents the info we get from a Chroma DB collection"""
-
+    name: str
     count: int
     peek: GetResult
 
 
-def list_collections() -> dict[str, GetResult]:
+def list_collections() -> dict[str, CollectionInfo]:
     collections = {}
     for collection in client.list_collections():
         peek = collection.peek()  # TODO should be optional
         count = collection.count()
-        collections[collection.name] = CollectionInfo(count=count, peek=peek)
+        collections[collection.name] = CollectionInfo(name=collection.name, count=count, peek=peek)
 
     return collections
 
