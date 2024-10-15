@@ -3,9 +3,11 @@ This module holds the top level function for managing the index, ie the data ins
 """
 
 from configparser import ConfigParser
-from kilimandjaro.db import add_to_collection
+from kilimandjaro.db import add_to_collection, list_collections
 from kilimandjaro.source import get_ccam_actes, ccam_acte_query
 import fire
+from rich import print
+from rich.tree import Tree
 
 
 def clean_index():
@@ -48,13 +50,25 @@ def add(source):
             print(f"{source} is not a valid add option.")
 
 
+def clean(collection_name: str):
+    """Delete a collection"""
+    if collection_name in list_collections():
+        print("[bold yellow]>[/] Deleting collection.")
+        print("[bold green]√[/] Done.")
+    else:
+        print(
+            f"[bold red]X[/] The [italic]{collection_name}[/] collection doesn't exist."
+        )
+
+
 def config():
     """Provides configuration information"""
     conf = ConfigParser()
     conf.read("config.toml")
-    print("Configuration sections:")
+    conf_sections = Tree("[bold blue]¬[/] Configuration sections")
     for section in conf.sections():
-        print(f"- {section}")
+        conf_sections.add(str(section))
+    print(conf_sections)
 
 
 def check():
@@ -63,4 +77,11 @@ def check():
 
 
 if __name__ == "__main__":
-    fire.Fire({"add": add, "config": config, "check": check})
+    fire.Fire(
+        {
+            "add": add,
+            "check": check,
+            "clean": clean,
+            "config": config,
+        }
+    )
