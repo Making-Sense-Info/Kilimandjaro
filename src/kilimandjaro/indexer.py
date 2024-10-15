@@ -3,15 +3,16 @@ This module holds the top level function for managing the index, ie the data ins
 """
 
 from configparser import ConfigParser
-from kilimandjaro.db import add_to_collection, list_collections
+from kilimandjaro.db import add_to_collection, list_collections, delete_collection
 from kilimandjaro.source import get_ccam_actes, ccam_acte_query
 import fire
 from rich import print
 from rich.tree import Tree
 
 
-def clean_index():
-    pass
+def del_collection(name: str):
+    """Call the `db` module to delete a collection"""
+    delete_collection(name)
 
 
 def add_ccam_actes():
@@ -51,9 +52,10 @@ def add(source):
 
 
 def clean(collection_name: str):
-    """Delete a collection"""
+    """Clean the DB. Currently only support the deletion of a collection."""
     if collection_name in list_collections():
         print("[bold yellow]>[/] Deleting collection.")
+        delete_collection(collection_name)
         print("[bold green]√[/] Done.")
     else:
         print(

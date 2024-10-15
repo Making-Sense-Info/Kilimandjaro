@@ -42,3 +42,7 @@ def query(collection_name: str, text: str) -> QueryResult:
     collection = client.get_collection(collection_name)
     results = collection.query(query_texts=text)
     return results
+
+def delete_collection(name: str):
+    """Thin wrapper around ChromaDB API"""
+    client.delete_collection(name)
