@@ -2,10 +2,12 @@ import streamlit as st
 import kilimandjaro.db as db
 from kilimandjaro.models import CollectionInfo
 
+
 @st.dialog("Peek")
 def peekaboo(info: CollectionInfo):
     st.markdown("First n terms of " + info["name"])
     st.write(info["peek"])
+
 
 st.header("Kilimandjaro :mountain:")
 st.subheader("Querying concepts")
