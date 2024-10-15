@@ -26,7 +26,7 @@ if selected:
 text = st.text_input("Your text")
 run = st.button("Run")
 
-if run:
+if text or run:
     st.markdown(f"Matching terms for: {text}")
     results = db.query("ccam", text)
     for result in zip(results["ids"][0], results["documents"][0]):
