@@ -1,6 +1,6 @@
 [project]
 name = "kilimandjaro"
-version = "0.1.0"
+version = "0.2.0"
 description = "Querying concepts"
 authors = [{ name = "romaintailhurat", email = "romain.tailhurat@gmail.com" }]
 dependencies = [
