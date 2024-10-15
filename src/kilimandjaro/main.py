@@ -30,6 +30,6 @@ run = st.button("Run")
 
 if text or run:
     st.markdown(f"Matching terms for: {text}")
-    results = db.query("ccam", text)
+    results = db.query(selected, text)
     for result in zip(results["ids"][0], results["documents"][0]):
         st.markdown(f"_{result[0]}_ - {result[1]}")

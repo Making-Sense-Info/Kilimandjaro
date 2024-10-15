@@ -3,7 +3,7 @@ import xml.etree.ElementTree as et
 from pathlib import Path
 import httpx
 from urllib.parse import quote_plus
-from kilimandjaro.models import CCAMActe, SPARQLQuery
+from kilimandjaro.models import CCAMActe, SPARQLQuery, SnomedTerm
 
 conf = ConfigParser()
 conf.read("config.toml")
@@ -13,29 +13,32 @@ namespaces = {"l": "ddi:logicalproduct:3_3", "r": "ddi:reusable:3_3"}
 snomed_tension_query = SPARQLQuery(
     name="Contient `tension`",
     value="""
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX sct-ext: <http://data.esante.gouv.fr/NRC-France/sct-ext#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select ?disorder ?label where {
-	?disorder dc:type "disorder" .
-    ?disorder rdfs:label ?label
-    FILTER langMatches(lang(?label), "fr")
-    FILTER contains(?label, "tension")
-}
-""",
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    PREFIX sct-ext: <http://data.esante.gouv.fr/NRC-France/sct-ext#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    select ?disorder ?label where {
+    	?disorder dc:type "disorder" .
+        ?disorder rdfs:label ?label
+        FILTER langMatches(lang(?label), "fr")
+        FILTER contains(?label, "tension")
+    }
+    """,
 )
 
 snomed_random_query = SPARQLQuery(
-    name="Aléa, les 500 premiers",
+    name="Aléa, les 1000 premiers",
     value="""
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-select ?disorder ?random ?label where {
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    select ?disorder ?random ?label ?code where {
 	?disorder dc:type "disorder" .
-	?disorder rdfs:label ?label
+	?disorder rdfs:label ?label .
+        ?disorder skos:notation ?code
 	FILTER langMatches(lang(?label), "fr")
-    BIND(RAND() as ?random)
-} order by ?random limit 1000
-""",
+        BIND(RAND() as ?random)
+    } order by ?random limit 1000
+    """,
 )
 
 ccam_acte_query = SPARQLQuery(
@@ -70,14 +73,17 @@ async def get_category_scheme_from_ddi(source_file_path: Path) -> list[str]:
         return categories
 
 
-async def get_snomed_terms(query: SPARQLQuery):
+def get_snomed_terms(query: SPARQLQuery) -> list[SnomedTerm]:
     """From GraphDB but with filter in order to limit what we work with.
     We should also have an alternative that download everything on disk once?"""
-    target = f"https://graphdb.linked-open-statistics.org/repositories/snomed?query={quote_plus(query.value)}"
+    target = f"{conf["kilimandjaro.sources"]["triple-store-url"]}snomed?query={query.encoded()}"
 
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     res = resp.json()
-    final_res = [terms["label"]["value"] for terms in res["results"]["bindings"]]
+    final_res = [
+        SnomedTerm(code=terms["code"]["value"], label=terms["label"]["value"])
+        for terms in res["results"]["bindings"]
+    ]
     return final_res
 
 

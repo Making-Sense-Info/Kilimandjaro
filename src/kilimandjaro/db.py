@@ -32,8 +32,21 @@ def batch_update(
     collection_name: str, documents: list[Document], ids: list[ID], step: int = 500
 ):
     """Add documents and ids to a collection by blocks of `step` size."""
-    # TODO WIP
-    pass
+    # WIP since there are some bugs / limits with the number of documents
+    # that can be indexed, we are batching here
+    # see https://github.com/chroma-core/chroma/issues/1049
+    batch_index = 0
+    batch_index_end = batch_index + step
+    while batch_index <= len(documents):
+        end = min(batch_index_end, len(documents) + 1)
+        subdocs = documents[batch_index:end]
+        subids = ids[batch_index:end]
+        if subdocs == []:
+            break  # ??? xx = list(range(11)) ; xx[11:11] == []
+        print(f"indexing documents from {batch_index} to {end-1}")
+        add_to_collection(collection_name, subdocs, subids)
+        batch_index = batch_index + step
+        batch_index_end = batch_index + step
 
 
 def query(collection_name: str, text: str) -> QueryResult:
@@ -42,6 +55,7 @@ def query(collection_name: str, text: str) -> QueryResult:
     collection = client.get_collection(collection_name)
     results = collection.query(query_texts=text)
     return results
+
 
 def delete_collection(name: str):
     """Thin wrapper around ChromaDB API"""

@@ -3,11 +3,37 @@ This module holds the top level function for managing the index, ie the data ins
 """
 
 from configparser import ConfigParser
-from kilimandjaro.db import add_to_collection, list_collections, delete_collection
-from kilimandjaro.source import get_ccam_actes, ccam_acte_query
+from kilimandjaro.db import (
+    add_to_collection,
+    batch_update,
+    list_collections,
+    delete_collection,
+)
+from kilimandjaro.source import (
+    get_ccam_actes,
+    ccam_acte_query,
+    get_snomed_terms,
+    snomed_random_query,
+)
 import fire
-from rich import print
+from rich import print as rprint
 from rich.tree import Tree
+
+
+# --- Print helpers
+def ongoing(text):
+    rprint(f"[bold yellow]>[/] {text}.")
+
+
+def ok(text):
+    rprint(f"[bold green]√[/] {text}.")
+
+
+def err(text):
+    rprint(f"[bold red]X[/] {text}.")
+
+
+# --- Action functions
 
 
 def del_collection(name: str):
@@ -15,26 +41,24 @@ def del_collection(name: str):
     delete_collection(name)
 
 
+def add_snomed():
+    """WIP Currently only a small fraction of Snomed CT"""
+    ongoing("Fetching Snomed data")
+    res = get_snomed_terms(snomed_random_query)
+    documents = [term["label"] for term in res]
+    ids = [term["code"] for term in res]
+    ongoing("Adding to collection")
+    batch_update("snomed", documents, ids)
+
+
 def add_ccam_actes():
     """Create a CCAM actes collection"""
-    print("fetching ccam data")
+    ongoing("Fetching ccam data")
     actes_data = get_ccam_actes(ccam_acte_query)
     documents = [acte["label"] for acte in actes_data]
     ids = [acte["code"] for acte in actes_data]
-    print("adding to collection")
-    # WIP since there are some bugs / limits with the number of documents
-    # that can be indexed, we are batching here
-    # see https://github.com/chroma-core/chroma/issues/1049
-    batch_index = 0
-    batch_index_end = batch_index + 500
-    while batch_index <= len(documents):
-        end = min(batch_index_end, len(documents) + 1)
-        subdocs = documents[batch_index:end]
-        subids = ids[batch_index:end]
-        print(f"indexing documents from {batch_index} to {end-1}")
-        add_to_collection("ccam", subdocs, subids)
-        batch_index = batch_index + 500
-        batch_index_end = batch_index + 500
+    ongoing("Adding to collection")
+    batch_update("ccam", documents, ids)
 
 
 # --- CLI
@@ -46,21 +70,19 @@ def add(source):
         case "ccam":
             add_ccam_actes()
         case "snomed":
-            print("Work in progress.")
+            add_snomed()
         case _:
-            print(f"{source} is not a valid add option.")
+            err(f"{source} is not a valid option")
 
 
 def clean(collection_name: str):
     """Clean the DB. Currently only support the deletion of a collection."""
     if collection_name in list_collections():
-        print("[bold yellow]>[/] Deleting collection.")
+        ongoing(f"Cleaning collection {collection_name}")
         delete_collection(collection_name)
-        print("[bold green]√[/] Done.")
+        ok("Done.")
     else:
-        print(
-            f"[bold red]X[/] The [italic]{collection_name}[/] collection doesn't exist."
-        )
+        err(f"{collection_name} collection doesn't exist")
 
 
 def config():
@@ -75,7 +97,7 @@ def config():
 
 def check():
     """For now, this command is use to perform dev check."""
-    get_ccam_actes(ccam_acte_query)
+    ok("No checks for now")
 
 
 if __name__ == "__main__":
