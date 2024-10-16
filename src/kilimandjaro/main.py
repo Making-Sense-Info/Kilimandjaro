@@ -1,13 +1,17 @@
+"""This module holds the code for the web UI"""
+
 import streamlit as st
 import kilimandjaro.db as db
 from kilimandjaro.models import CollectionInfo
 
+# --- Components
 
 @st.dialog("Peek")
 def peekaboo(info: CollectionInfo):
     st.markdown("First n terms of " + info["name"])
     st.write(info["peek"])
 
+# --- Main
 
 st.header("Kilimandjaro :mountain:")
 st.subheader("Querying concepts")

@@ -43,8 +43,6 @@ The three main pieces of this application are:
   - the indexer program, which fetch source data and push them to ChromaDB
   - the web UI, which allows humans to really use the application
 
-The indexer is a command line
-
 ```mermaid
 graph
     DB[(vector DB)]
@@ -56,6 +54,24 @@ graph
     INDEXER -->|indexes| DB
     DB -->|produces embeddings| DB
     WEBUI -->|queries| DB
+```
+The indexer is a command line. This:
+
+```shell
+rye run indexer --help
+```
+
+will display available commands.
+
+It currently fetches data from a triple store.
+
+## Configuration
+
+To be able to fetch data, you must provide a triple store endpoint in the corresponding configuration section:
+
+```toml
+[kilimandjaro.sources]
+triple-store-url = "<ENDPOINT URL>"
 ```
 
 ## Notes
