@@ -15,7 +15,7 @@ The main way to use Kilimandjaro is to:
 2. query through the UI.
 
 Before anything:
-  - install [rye]() (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
+  - install [rye](https://rye.astral.sh) (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
   - run `rye sync` at the root of this repo directory
   - copy the `config-skeleton.toml` file to have a dedicated `config.toml` in which you provide actual values
     - `rye run indexer config` will display the configuration sections (more on how to complete below)
