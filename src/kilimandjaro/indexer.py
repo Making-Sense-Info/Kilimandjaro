@@ -14,6 +14,7 @@ from kilimandjaro.source import (
     ccam_acte_query,
     get_snomed_terms,
     snomed_random_query,
+    get_loinc_items
 )
 import fire
 from rich import print as rprint
@@ -60,6 +61,13 @@ def add_ccam_actes():
     ongoing("Adding to collection")
     batch_update("ccam", documents, ids)
 
+def add_loinc():
+    ongoing("Fetching Loinc")
+    items = get_loinc_items()
+    documents = [item["label"] for item in items]
+    ids = [item["code"] for item in items]
+    ongoing("Adding to collection")
+    batch_update("loinc", documents, ids)
 
 # --- CLI
 
@@ -71,6 +79,8 @@ def add(source):
             add_ccam_actes()
         case "snomed":
             add_snomed()
+        case "loinc":
+            add_loinc()
         case _:
             err(f"{source} is not a valid option")
 

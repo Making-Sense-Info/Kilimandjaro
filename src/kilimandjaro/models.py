@@ -40,6 +40,9 @@ class SnomedTerm(TypedDict):
     code: str
     label: str
 
+class LoincItem(TypedDict):
+    code: str
+    label: str
 
 class CollectionInfo(TypedDict):
     """Represents the info we get from a Chroma DB collection"""

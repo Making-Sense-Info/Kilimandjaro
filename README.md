@@ -14,16 +14,12 @@ The main way to use Kilimandjaro is to:
 1. produce and store embeddings
 2. query through the UI.
 
-Before anything:
-  - install [rye](https://rye.astral.sh) (several methods here, there's a [homebrew formula](https://formulae.brew.sh/formula/rye#default))
-  - run `rye sync` at the root of this repo directory
-  - copy the `config-skeleton.toml` file to have a dedicated `config.toml` in which you provide actual values
-    - `rye run indexer config` will display the configuration sections (more on how to complete below)
+We use `uv` to manage dependencies and run programs.
 
 To produce the embeddings - here for the CCAM data source:
 
 ```shell
-rye run indexer add ccam
+uv run src/kilimandjaro/indexer.py add ccam
 ```
 
 It will fetch the source data, produce and store the embeddings in a local [ChromaDB](https://www.trychroma.com) instance.
@@ -33,7 +29,7 @@ For this source, the whole process is several minutes long.
 Then launch the web UI:
 
 ```shell
-rye run webui
+uv run streamlit run src/kilimandjaro/main.py
 ```
 
 ## Architecture
@@ -58,7 +54,7 @@ graph
 The indexer is a command line. This:
 
 ```shell
-rye run indexer --help
+uv run src/kilimandjaro/indexer.py
 ```
 
 will display available commands.

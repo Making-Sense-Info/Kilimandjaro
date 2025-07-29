@@ -3,7 +3,8 @@ import xml.etree.ElementTree as et
 from pathlib import Path
 import httpx
 from urllib.parse import quote_plus
-from kilimandjaro.models import CCAMActe, SPARQLQuery, SnomedTerm
+from kilimandjaro.models import CCAMActe, SPARQLQuery, SnomedTerm, LoincItem
+import polars as pl
 
 conf = ConfigParser()
 conf.read("config.toml")
@@ -26,7 +27,7 @@ snomed_tension_query = SPARQLQuery(
 )
 
 snomed_random_query = SPARQLQuery(
-    name="Aléa, les 1000 premiers",
+    name="Aléa, les 10000 premiers",
     value="""
     PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -37,7 +38,7 @@ snomed_random_query = SPARQLQuery(
         ?disorder skos:notation ?code
 	FILTER langMatches(lang(?label), "fr")
         BIND(RAND() as ?random)
-    } order by ?random limit 1000
+    } order by ?random limit 10000
     """,
 )
 
@@ -92,9 +93,7 @@ def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     Get all the CCAM actes, with codes and labels.
     See https://smt.esante.gouv.fr/terminologie-ccam/
     """
-    print(conf["kilimandjaro.sources"]["triple-store-url"])
     target = f"{conf["kilimandjaro.sources"]["triple-store-url"]}ccam?query={query.encoded()}"
-    print(target)
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     json_res = resp.json()
 
@@ -104,3 +103,14 @@ def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     ]
 
     return final_res
+
+def get_loinc_items() -> list[LoincItem]:
+    """
+    From an Excel file provided by the ANS
+    See https://smt.esante.gouv.fr/terminologie-loinc-biologie-fra/
+    """
+    path = "/Users/romaintailhurat/data/terminologie-loinc-international-2.22 (2.78)/dat/LOINCFR_JeuDeValeurs.xlsx"
+    df = pl.read_excel(path, sheet_name="1.Jeu de valeurs complet")
+    s_codes = df.to_series(0).to_list()
+    s_labels = df.to_series(1).to_list()
+    return [{"code": x, "label": y} for x, y in zip(s_codes, s_labels)]
