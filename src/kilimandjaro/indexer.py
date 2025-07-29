@@ -14,7 +14,7 @@ from kilimandjaro.source import (
     ccam_acte_query,
     get_snomed_terms,
     snomed_random_query,
-    get_loinc_items
+    get_loinc_items,
 )
 import fire
 from rich import print as rprint
@@ -61,6 +61,7 @@ def add_ccam_actes():
     ongoing("Adding to collection")
     batch_update("ccam", documents, ids)
 
+
 def add_loinc():
     ongoing("Fetching Loinc")
     items = get_loinc_items()
@@ -68,6 +69,7 @@ def add_loinc():
     ids = [item["code"] for item in items]
     ongoing("Adding to collection")
     batch_update("loinc", documents, ids)
+
 
 # --- CLI
 

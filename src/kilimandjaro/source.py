@@ -77,7 +77,7 @@ async def get_category_scheme_from_ddi(source_file_path: Path) -> list[str]:
 def get_snomed_terms(query: SPARQLQuery) -> list[SnomedTerm]:
     """From GraphDB but with filter in order to limit what we work with.
     We should also have an alternative that download everything on disk once?"""
-    target = f"{conf["kilimandjaro.sources"]["triple-store-url"]}snomed?query={query.encoded()}"
+    target = f"{conf['kilimandjaro.sources']['triple-store-url']}snomed?query={query.encoded()}"
 
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     res = resp.json()
@@ -93,7 +93,7 @@ def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     Get all the CCAM actes, with codes and labels.
     See https://smt.esante.gouv.fr/terminologie-ccam/
     """
-    target = f"{conf["kilimandjaro.sources"]["triple-store-url"]}ccam?query={query.encoded()}"
+    target = f"{conf['kilimandjaro.sources']['triple-store-url']}ccam?query={query.encoded()}"
     resp = httpx.get(target, headers={"Accept": "application/sparql-results+json"})
     json_res = resp.json()
 
@@ -103,6 +103,7 @@ def get_ccam_actes(query: SPARQLQuery) -> list[CCAMActe]:
     ]
 
     return final_res
+
 
 def get_loinc_items() -> list[LoincItem]:
     """

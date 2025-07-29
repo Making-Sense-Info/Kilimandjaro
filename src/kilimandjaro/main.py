@@ -6,10 +6,12 @@ from kilimandjaro.models import CollectionInfo
 
 # --- Components
 
+
 @st.dialog("Peek")
 def peekaboo(info: CollectionInfo):
     st.markdown("First n terms of " + info["name"])
     st.write(info["peek"])
+
 
 # --- Main
 
@@ -22,7 +24,7 @@ selected = st.selectbox("Choose a terminology", colls.keys(), index=None)
 
 if selected:
     st.markdown(
-        f"You selected {colls[selected]["name"]} which holds {colls[selected]["count"]} terms."
+        f"You selected {colls[selected]['name']} which holds {colls[selected]['count']} terms."
     )
     peeked = st.button("Peek")
     if peeked:

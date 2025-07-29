@@ -43,7 +43,7 @@ def batch_update(
         subids = ids[batch_index:end]
         if subdocs == []:
             break  # ??? xx = list(range(11)) ; xx[11:11] == []
-        print(f"indexing documents from {batch_index} to {end-1}")
+        print(f"indexing documents from {batch_index} to {end - 1}")
         add_to_collection(collection_name, subdocs, subids)
         batch_index = batch_index + step
         batch_index_end = batch_index + step
